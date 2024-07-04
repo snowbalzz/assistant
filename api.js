@@ -104,10 +104,8 @@ async function createSession(topic, goal, res) {
     assistantObject.instructions = assistantObject.instructions.replace(
       "[insert topic]",
       sanitize(topic),
-      // topic,
       "[insert goal]",
       sanitize(goal),
-      //goal
     );
   } else {
     res.status(500).json({ error: "Topic or Goal not provided!" });
