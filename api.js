@@ -115,11 +115,14 @@ async function runAssistant(threadId, assistantId) {
   return response;
 }
 
-async function addMessage(threadId, message) {
+async function addMessage(threadId, message, user) {
   logger(`Adding message: ${message}`);
   const response = await openai.beta.threads.messages.create(threadId, {
     role: "user",
     content: message,
+    metadata: {
+      user: user,
+    },
   });
   return response;
 }
@@ -174,10 +177,10 @@ app.post("/session", (req, res) => {
 });
 
 app.post("/session/:id/thread/:id2", (req, res) => {
-  const { message } = req.body;
+  const { message, user } = req.body;
   const assistantId = req.params.id;
   const threadId = req.params.id2;
-  addMessage(threadId, message)
+  addMessage(threadId, message, user)
     .then((message) => {
       runAssistant(threadId, assistantId)
         .then((run) => {
